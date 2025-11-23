@@ -1,50 +1,43 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
-import "./App.css";
+import { useEffect, useState } from 'react';
+import { initDB } from './db/init';
+import './App.css';
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  const [dbStatus, setDbStatus] = useState<string>('Initializing...');
+  const [tasks, setTasks] = useState<any[]>([]);
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+  useEffect(() => {
+    async function testDB() {
+      try {
+        // Initialize database first
+        const db = await initDB();
+        
+        // Test 1: Insert a task
+        await db.query(`
+          INSERT INTO nodes (title, energy, interest)
+          VALUES ('Test Task', 3, 4)
+        `);
+
+        // Test 2: Read it back
+        const result = await db.query('SELECT * FROM nodes');
+        setTasks(result.rows);
+        setDbStatus('✅ Database working!');
+      } catch (error) {
+        setDbStatus(`❌ Error: ${error}`);
+        console.error(error);
+      }
+    }
+    
+    testDB();
+  }, []);
 
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
-
-      <div className="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
+    <div style={{ padding: '20px' }}>
+      <h1>Billy - Database Test</h1>
+      <p>{dbStatus}</p>
+      <h3>Tasks in database:</h3>
+      <pre>{JSON.stringify(tasks, null, 2)}</pre>
+    </div>
   );
 }
 

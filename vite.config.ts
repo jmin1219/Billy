@@ -29,4 +29,14 @@ export default defineConfig(async () => ({
       ignored: ["**/src-tauri/**"],
     },
   },
+
+    // Critical: Optimize deps to exclude PGlite from pre-bundling
+  optimizeDeps: {
+    exclude: ['@electric-sql/pglite']
+  },
+  
+  // Handle WASM files properly
+  build: {
+    target: 'esnext'
+  }
 }));
