@@ -1,42 +1,60 @@
-import { useEffect, useState } from 'react';
-import { initDB } from './db/init';
-import './App.css';
+import { useCallback, useState } from 'react';
+import {
+  ReactFlow,
+  Background,
+  Controls,
+  Node,
+  OnNodesChange,
+  applyNodeChanges
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
+import TaskNode from './components/TaskNode';
+
+const nodeTypes = {
+  task: TaskNode
+};
+
+const initialNodes: Node[] = [
+  {
+    id: '1',
+    type: 'task',
+    position: { x: 100, y: 100 },
+    data: { title: 'Buy milk', energy: 2, interest: 3 }
+  },
+  {
+    id: '2',
+    type: 'task',
+    position: { x: 300, y: 100 },
+    data: { title: 'Fix car', energy: 5, interest: 2 }
+  },
+  {
+    id: '3',
+    type: 'task',
+    position: { x: 200, y: 250 },
+    data: { title: 'Call mom', energy: 1, interest: 5 }
+  }
+];
 
 function App() {
-  const [dbStatus, setDbStatus] = useState<string>('Initializing...');
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [nodes, setNodes] = useState<Node[]>(initialNodes);
 
-  useEffect(() => {
-    async function testDB() {
-      try {
-        // Initialize database first
-        const db = await initDB();
-        
-        // Test 1: Insert a task
-        await db.query(`
-          INSERT INTO nodes (title, energy, interest)
-          VALUES ('Test Task', 3, 4)
-        `);
-
-        // Test 2: Read it back
-        const result = await db.query('SELECT * FROM nodes');
-        setTasks(result.rows);
-        setDbStatus('✅ Database working!');
-      } catch (error) {
-        setDbStatus(`❌ Error: ${error}`);
-        console.error(error);
-      }
-    }
-    
-    testDB();
-  }, []);
+  const onNodesChange: OnNodesChange = useCallback(
+    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    []
+  );
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Billy - Database Test</h1>
-      <p>{dbStatus}</p>
-      <h3>Tasks in database:</h3>
-      <pre>{JSON.stringify(tasks, null, 2)}</pre>
+    <div style={{ width: '100vw', height: '100vh' }}>
+      <ReactFlow
+        nodes={nodes}
+        nodeTypes={nodeTypes}
+        onNodesChange={onNodesChange}
+        onlyRenderVisibleElements={true}
+        fitView
+      >
+        <Background />
+        <Controls />
+      </ReactFlow>
     </div>
   );
 }
