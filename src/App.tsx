@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ReactFlow,
   Background,
@@ -9,8 +9,9 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import TaskNode from './components/TaskNode';
-import { getDB, initDB } from './db/init';
+import { getDB } from './db/init';
 import TaskForm from './components/TaskForm';
+import { useLiveQuery } from '@electric-sql/pglite-react';
 
 const nodeTypes = {
   task: TaskNode
@@ -24,39 +25,45 @@ function App() {
   const [isCreating, setIsCreating] = useState(false);
   const isModalOpen = selectedTask !== null || isCreating;
 
+  const handleEditNode = useCallback((nodeData: any) => {
+    setSelectedTask({
+      id: nodeData.id,
+      title: nodeData.title,
+      energy: nodeData.energy,
+      interest: nodeData.interest,
+      time_estimate: nodeData.time_estimate ?? 0
+    });
+  }, []);  // Empty dependency array ensures this runs only once and function never changes
+
+  // Subscribe to tasks query
+  const result = useLiveQuery(
+    `SELECT id, title, energy, interest, time_estimate, status, position_x, position_y FROM nodes`,
+    []
+  );
+
+  const flowNodes = useMemo(() => {
+    if (!result?.rows) return [];
+
+    return result.rows.map((row: any) => ({
+      id: row.id,
+      type: 'task',
+      position: {
+        x: row.position_x ?? 100,
+        y: row.position_y ?? 100
+      },
+      data: {
+        title: row.title,
+        energy: row.energy,
+        interest: row.interest,
+        time_estimate: row.time_estimate,
+        status: row.status,
+      },
+    }))
+  }, [result?.rows]);
+
   useEffect(() => {
-    async function loadTasks() {
-      // 1. Initialize database
-      const db = await initDB();
-      
-      // 2. Query all tasks (what columns do you need?)
-      const result = await db.query(`
-        SELECT id, title, energy, interest, time_estimate, position_x, position_y 
-        FROM nodes
-      `);
-      
-      // 3. Transform rows to React Flow nodes
-      const flowNodes = result.rows.map((row: any) => ({
-        id: row.id,
-        type: 'task',
-        position: { 
-          x: row.position_x ?? 100,  // Default to 100 if null
-          y: row.position_y ?? 100 
-        },
-        data: {
-          title: row.title,
-          energy: row.energy,
-          interest: row.interest,
-          time_estimate: row.time_estimate,
-          onEdit: () => handleEditNode(row)
-        }
-      }));
-      
-      setNodes(flowNodes);
-    }
-    
-    loadTasks();
-  }, []);
+    setNodes(flowNodes);
+  }, [flowNodes]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -69,43 +76,6 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedNodeId]);
 
-  // Function to reload tasks from DB
-  const reloadTasks = async () => {
-    const db = getDB();
-    const result = await db.query(`
-      SELECT id, title, energy, interest, time_estimate, position_x, position_y
-      FROM nodes
-    `);
-
-    const flowNodes = result.rows.map((row: any) => ({
-      id: row.id,
-      type: 'task',
-      position: { 
-        x: row.position_x ?? 100,
-        y: row.position_y ?? 100 
-      },
-      data: {
-        title: row.title,
-        energy: row.energy,
-        interest: row.interest,
-        time_estimate: row.time_estimate,
-        onEdit: () => handleEditNode(row)
-      }
-    }));
-
-    setNodes(flowNodes);
-  }
-
-  const handleEditNode = (nodeData: any) => {
-    setSelectedTask({
-      id: nodeData.id,
-      title: nodeData.title,
-      energy: nodeData.energy,
-      interest: nodeData.interest,
-      time_estimate: nodeData.time_estimate ?? 0
-    });
-  }
-
   const handleCreateTask = async (data: any) => {
     const db = getDB();
     
@@ -114,7 +84,8 @@ function App() {
       VALUES ($1, $2, $3, $4)
     `, [data.title, data.energy, data.interest, data.time_estimate]);
 
-    await reloadTasks();
+    setIsCreating(false);
+    setSelectedTask(null);
   }
 
   const handleUpdateTask = async (data: any) => {
@@ -126,7 +97,22 @@ function App() {
       WHERE id = $5
     `, [data.title, data.energy, data.interest, data.time_estimate, selectedTask.id]);
 
-    await reloadTasks();
+    setIsCreating(false);
+    setSelectedTask(null);
+  }
+
+  const handleToggleTaskStatus = async (nodeId: string) => {
+    const db = getDB();
+    const result = await db.query(`
+      SELECT status FROM nodes WHERE id = $1
+    `, [nodeId]);
+    const currentStatus = result.rows[0]?.status || 'todo';
+    const newStatus = currentStatus === 'done' ? 'todo' : 'done';
+    await db.query(`
+      UPDATE nodes
+      SET status = $1
+      WHERE id = $2
+    `, [newStatus, nodeId]);
   }
 
   const handleDeleteNode = async (nodeId: string) => {
@@ -137,7 +123,8 @@ function App() {
       WHERE id = $1
     `, [nodeId]);
     
-    await reloadTasks();
+    setIsCreating(false);
+    setSelectedTask(null);
   }
 
   const onNodesChange: OnNodesChange = useCallback(
@@ -164,7 +151,21 @@ function App() {
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         onlyRenderVisibleElements={true}
-        onNodeClick={(_, node) => setSelectedNodeId(node.id)}
+        onNodeClick={(event, node) => {
+          // Check if clicked on status toggle
+          const target = event.target as HTMLElement;
+          if (target.dataset.statusToggle === 'true') {
+            handleToggleTaskStatus(node.id);
+            return;
+          }
+
+          // Otherwise just select the node
+          setSelectedNodeId(node.id);
+        }}
+        onNodeDoubleClick={(_, node) => {
+          const row = result?.rows.find(r => r.id === node.id);
+          if (row) handleEditNode(row);
+        }}
         onPaneClick={() => setSelectedNodeId(null)} // Deselect node when clicking on the canvas
         fitView
       >
