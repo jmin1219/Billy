@@ -12,6 +12,7 @@ import TaskNode from './components/TaskNode';
 import { getDB } from './db/init';
 import TaskForm from './components/TaskForm';
 import { useLiveQuery } from '@electric-sql/pglite-react';
+import { saveEmbedding } from './ai/embeddings';
 
 const nodeTypes = {
   task: TaskNode
@@ -79,10 +80,16 @@ function App() {
   const handleCreateTask = async (data: any) => {
     const db = getDB();
     
-    await db.query(`
+    const result = await db.query(`
       INSERT INTO nodes (title, energy, interest, time_estimate)
       VALUES ($1, $2, $3, $4)
+      RETURNING id
     `, [data.title, data.energy, data.interest, data.time_estimate]);
+
+    const taskId = (result.rows[0] as any).id;
+    
+    // Generate embedding in background (fire-and-forget)
+    saveEmbedding(db, taskId, data.title).catch(err => console.error('Error generating embedding:', err));
 
     setIsCreating(false);
     setSelectedTask(null);
@@ -97,6 +104,9 @@ function App() {
       WHERE id = $5
     `, [data.title, data.energy, data.interest, data.time_estimate, selectedTask.id]);
 
+    // Regenerate embedding if title changed
+    saveEmbedding(db, selectedTask.id, data.title).catch(err => console.error('Error generating embedding:', err));
+
     setIsCreating(false);
     setSelectedTask(null);
   }
@@ -106,7 +116,7 @@ function App() {
     const result = await db.query(`
       SELECT status FROM nodes WHERE id = $1
     `, [nodeId]);
-    const currentStatus = result.rows[0]?.status || 'todo';
+    const currentStatus = (result.rows[0] as any)?.status || 'todo';
     const newStatus = currentStatus === 'done' ? 'todo' : 'done';
     await db.query(`
       UPDATE nodes

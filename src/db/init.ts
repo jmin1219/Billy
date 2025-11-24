@@ -29,3 +29,8 @@ export function getDB(): PGliteWithLive {
     }   
     return dbInstance;
 }
+
+// Temporary helper for dev - remove later
+if (typeof window !== 'undefined') {
+  (window as any).__getDB = getDB;
+}

@@ -12,6 +12,7 @@
   "dependencies": {
     "@electric-sql/pglite": "^0.3.14",
     "@electric-sql/pglite-react": "^0.2.32",
+    "@huggingface/transformers": "^3.8.0",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
     "@xyflow/react": "^12.9.3",

@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS nodes (
 -- Vector embeddings for semantic search
 CREATE TABLE IF NOT EXISTS embeddings (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  node_id UUID REFERENCES nodes(id) ON DELETE CASCADE,
+  node_id UUID UNIQUE REFERENCES nodes(id) ON DELETE CASCADE,
   content_hash TEXT NOT NULL,
   embedding vector(384), -- MiniLM-L6-v2 produces 384-dim vectors
   created_at TIMESTAMPTZ DEFAULT NOW()
