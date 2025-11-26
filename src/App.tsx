@@ -13,6 +13,8 @@ import { getDB } from './db/init';
 import TaskForm from './components/TaskForm';
 import { useLiveQuery } from '@electric-sql/pglite-react';
 import { saveEmbedding } from './ai/embeddings';
+import { findSimilarTasks } from './db/similarity';
+import toast, { Toaster } from 'react-hot-toast';
 
 const nodeTypes = {
   task: TaskNode
@@ -81,15 +83,23 @@ function App() {
     const db = getDB();
     
     const result = await db.query(`
-      INSERT INTO nodes (title, energy, interest, time_estimate)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO nodes (title, energy, interest, time_estimate, position_x, position_y)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING id
-    `, [data.title, data.energy, data.interest, data.time_estimate]);
+    `, [data.title, data.energy, data.interest, data.time_estimate, Math.random() * 500, Math.random() * 500]);
 
     const taskId = (result.rows[0] as any).id;
     
     // Generate embedding in background (fire-and-forget)
-    saveEmbedding(db, taskId, data.title).catch(err => console.error('Error generating embedding:', err));
+    saveEmbedding(db, taskId, data.title)
+      .then(async () => {
+        const similar = await findSimilarTasks(taskId, 0.85, 5);
+
+        if (similar.length > 0) {
+          toast(`⚠️ Similar task found: "${similar[0].title}" (${Math.round(similar[0].similarity * 100)}% match)`);
+        }
+      })
+      .catch(err => console.error('Error generating embedding:', err));
 
     setIsCreating(false);
     setSelectedTask(null);
@@ -144,6 +154,7 @@ function App() {
 
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
+      <Toaster position="bottom-right" />
       <button
         onClick={() => setIsCreating(true)}
         style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 10}}
