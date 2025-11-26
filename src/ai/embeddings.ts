@@ -42,9 +42,12 @@ export async function saveEmbedding(
         const embedding = await generateEmbedding(text);
         const contentHash = await generateContentHash(text);
 
+        // pgvector expected array format: [1,2,3] not "[1, 2, 3]"
+        const vectorString = `[${embedding.join(',')}]`;
+
         await db.query(
             'INSERT INTO embeddings (node_id, content_hash, embedding) VALUES ($1, $2, $3) ON CONFLICT (node_id) DO UPDATE SET content_hash = $2, embedding = $3',
-            [nodeId, contentHash, JSON.stringify(embedding)]
+            [nodeId, contentHash, vectorString]
         );
         console.log('✅ Embedding saved for task', nodeId);
     } catch (error) {
