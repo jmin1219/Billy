@@ -237,6 +237,8 @@ function App() {
           if (row) handleEditNode(row);
         }}
         onPaneClick={() => setSelectedNodeId(null)} // Deselect node when clicking on the canvas
+        minZoom={0.1}
+        maxZoom={2}
         fitView
       >
         <Background />

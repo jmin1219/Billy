@@ -50,8 +50,8 @@ export async function calculateSmartPosition(
 
     // Add small random offset to prevent exact overlap
     const pos = {
-        x: centroid.x + (Math.random() - 0.5) * 200,
-        y: centroid.y + (Math.random() - 0.5) * 200
+        x: centroid.x + (Math.random() - 0.5) * 400,
+        y: centroid.y + (Math.random() - 0.5) * 400
     };
     console.log('📍 Centroid:', Math.round(centroid.x), Math.round(centroid.y));
     console.log('📍 Final position:', Math.round(pos.x), Math.round(pos.y));

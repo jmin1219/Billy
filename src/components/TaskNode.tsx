@@ -1,5 +1,6 @@
-import { Handle, Position } from "@xyflow/react";
+import { Handle, Position, useStore } from "@xyflow/react";
 import { memo } from "react";
+import "./TaskNode.css";
 
 interface TaskNodeData {
     title: string;
@@ -12,6 +13,8 @@ interface TaskNodeData {
 interface TaskNodeProps {
     data: TaskNodeData;
 }
+
+const zoomSelector =  (s) => s.transform[2];
 
 function getEnergyColor(energy?: number): string {
     if (!energy) return '#1a1a1a';
@@ -28,54 +31,77 @@ function getEnergyEmoji(energy?: number): string {
 }
 
 function TaskNode({ data }: TaskNodeProps) {
+    const zoom = useStore(zoomSelector);
     const bgColor = getEnergyColor(data.energy);
 
     return (
-        <div>
-            <div style={{
-                padding: '12px 16px',
-                border: '2px solid #555',
-                borderRadius: '8px',
-                background: bgColor,
-                color: 'white',
-                minWidth: '180px',
-                maxWidth: '250px',
-                minHeight: '100px',
-                maxHeight: '200px'
+        <div className="task-node">
+            {/* LOD 1: Dot View (far zoom out) */}
+            {zoom < 0.4 && (
+            <>
+                <Handle type="target" position={Position.Top} />
+                <div
+                    style={{
+                        backgroundColor: bgColor,
+                        width: '16px',
+                        height: '16px',
+                        borderRadius: '50%',
+                        border: '2px solid rgba(255,255,255,0.2)'   
+                    }}
+                />
+                <Handle type="source" position={Position.Bottom} />
+            </>
+            )}
+            
+            {/* LOD 2: Summary View (medium zoom) */}
+            {zoom >= 0.4 && zoom < 0.8 && (
+            <div className="task-summary" style= {{
+                backgroundColor: '#2a2a2a',
+                borderLeft: `4px solid ${bgColor}`,
+                padding: '8px 12px',
+                minWidth: '120px'
             }}>
                 <Handle type="target" position={Position.Top} />
-
-                {/* Title + Energy Emoji */}
-                <div style={{ 
-                    fontWeight: 'bold', 
-                    marginBottom: '8px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                }}>
-                    <span>{data.title}</span>
-                    <span style={{ fontSize: '20px'}}>{getEnergyEmoji(data.energy)}</span>
-                </div>
-
-                {/* Properties Row */}
-                <div style={{ fontSize: '12px', display: 'flex', color: '#d1d5db', gap: '12px' }}>
-                    {data.energy && <span>E: {data.energy}/5</span>}
-                    {data.interest && <span>I: {data.interest}/5</span>}
-                    {data.time_estimate != null && <span>T: {data.time_estimate} min</span>}
-
-                    {/* Status indicator - Click to toggle status: Complete or Incomplete*/}
-                    <span style={{ 
-                        marginLeft: 'auto',
-                        cursor: 'pointer',
-                        fontSize: '16px'
-                    }}
-                    data-status-toggle="true"
+                <div className="task-title" style={{
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    color: '#fff'
+                }}>{data.title}</div>
+                <div 
+                className="status-indicator"
+                style={{ backgroundColor: getEnergyColor(data.energy) }}
+                />
+                <Handle type="source" position={Position.Bottom} />
+            </div>
+            )}
+            
+            {/* LOD 3: Full Detail (zoomed in) */}
+            {zoom >= 0.8 && (
+            <div className="task-node-content" style={{backgroundColor: bgColor }}>
+                <Handle type="target" position={Position.Top} />
+                
+                <div className="task-header">
+                    <span 
+                        className="completion-toggle"
+                        data-toggle="completion"
+                        role="button"
                     >
                         {data.status === 'done' ? '✅' : '⭕️'}
                     </span>
+                    <h3 className="task-title">{data.title}</h3>
                 </div>
+                
+                <div className="task-properties">
+                <span className="energy-indicator">
+                    {getEnergyEmoji(data.energy)} E: {data.energy}
+                </span>
+                <span>I: {data.interest}</span>
+                <span>T: {data.time_estimate}h</span>
+                </div>
+                
                 <Handle type="source" position={Position.Bottom} />
             </div>
+            )}
         </div>
     );
 }
