@@ -1,0 +1,22 @@
+{
+  "dateFormat": "yyyy-MM-dd'T'HH:mm",
+  "enableCreateTime": true,
+  "headerUpdated": "updated",
+  "headerCreated": "created",
+  "minMinutesBetweenSaves": 1,
+  "ignoreGlobalFolder": [],
+  "ignoreCreatedFolder": [],
+  "enableExperimentalHash": false,
+  "fileHashMap": {
+    "output/daily_notes/2025-12-02.md": "bc808637f37e7d2a6763c481a34b65dac847fdbc8268769c5433aed98e095a4f",
+    "output/daily_notes/2025-12-03.md": "de5dd345ac2951504f1562a8d64e2345441f1552d57716142ea051efc52fde60",
+    "output/daily_notes/2025-12-04.md": "60f73e43af414bef10163c22180d5d012740fbfbd36dfe563efb52391d090933",
+    "output/daily_notes/2025-12-05.md": "70ed6e12bd453db6be844ed8dd37d9e101f70fe14be97175550d107277eb0f55",
+    "output/daily_notes/2025-12-08.md": "4190e14e170163059b65d3ba93d1d9866ff9edfc13a7d0530e451f4679c4b03e",
+    "output/daily_notes/2025-12-09.md": "40befb1680c89d68b4e92ee3818a83f64b555211a2843c410bdb983871dbf36f",
+    "concepts/Tax Residency Research.md": "de9da29e1b8fcaa7936cbe5f7fcde4b231e1844f3987500aa404243863ecb663",
+    "concepts/Billy Data Pipeline.md": "3c9d27638ca003d75547b495f1cf6edda4ac28f4216a8bd9cd5d665a2bc294ee",
+    "concepts/Non-Linear Lineage.md": "31a844e46f94d68ed6162f87b35152ddbffbcdc02bf369903adc375bda0cd748",
+    "output/daily_notes/2025-12-10.md": "a7ddf986462b17d9694eebdb8fb672a5bbc4c9dc35c34114c4fadba6a992a6f7"
+  }
+}

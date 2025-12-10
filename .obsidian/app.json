@@ -1,0 +1,12 @@
+{
+  "showInlineTitle": false,
+  "newFileLocation": "folder",
+  "newFileFolderPath": "concepts",
+  "attachmentFolderPath": "assets/attachments",
+  "userIgnoreFilters": [
+    "node_modules/",
+    "**/node_modules",
+    "data/",
+    ".*"
+  ]
+}
