@@ -8,5 +8,6 @@
     "**/node_modules",
     "data/",
     ".*"
-  ]
+  ],
+  "promptDelete": false
 }

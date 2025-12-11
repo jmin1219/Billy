@@ -37,31 +37,42 @@ def read_hardware_state(filepath):
     return "Hardware state unknown."
 
 def append_to_note(filepath, summary):
-    """Appends the conversation summary to the daily note."""
+    """Inserts the summary exactly where the placeholder is, keeping the placeholder for next time."""
     if not os.path.exists(filepath):
         print("⚠️ Error: Daily note not found.")
         return
 
-    # Read the file
     with open(filepath, 'r') as f:
         lines = f.readlines()
 
-    # Find where to insert (Under "## 2. Context")
-    # We look for the placeholder text usually
     new_lines = []
     inserted = False
     
+    # The beacon we look for
+    marker = "_Use the 'Interviewer Agent' to fill this._"
+
     for line in lines:
-        new_lines.append(line)
-        if "## 2. Context (The Software)" in line and not inserted:
-            new_lines.append(f"\n{summary}\n")
+        if marker in line and not inserted:
+            # 1. Insert the new summary BEFORE the marker
+            new_lines.append(f"{summary}\n\n")
+            # 2. Keep the marker (so you can run the script again later today!)
+            new_lines.append(line) 
             inserted = True
+        else:
+            new_lines.append(line)
+            
+    # Fallback if marker is missing
+    if not inserted:
+        new_lines = []
+        for line in lines:
+            new_lines.append(line)
+            if "## 2. Context (The Software)" in line:
+                new_lines.append(f"\n{summary}\n")
     
-    # Write back
     with open(filepath, 'w') as f:
         f.writelines(new_lines)
-    print(f"✅ Context added to {os.path.basename(filepath)}")
-
+    print(f"✅ Context injected into {os.path.basename(filepath)}")
+    
 def start_chat():
     genai.configure(api_key=API_KEY)
     
@@ -72,7 +83,7 @@ def start_chat():
     print(f"📊 Loaded: {hardware_state.replace(chr(10), ' | ')}\n") # Replace newlines for cleaner print
 
     # 2. Initialize Model
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-2.5-flash')
     chat = model.start_chat(history=[
         {"role": "user", "parts": f"You are Billy, a personal productivity assistant. My current stats: {hardware_state}. Interview me briefly (3-4 questions max) to understand my mental state, current ideas, and friction points. Be concise. Don't be a therapist, be a co-pilot."}
     ])
@@ -83,6 +94,10 @@ def start_chat():
     while True:
         user_input = input("\nYou: ")
         
+        if not user_input.strip():
+            print("⚠️  (Please type something to continue)")
+            continue
+
         if user_input.lower() in ['exit', 'quit', 'done']:
             print("\n💾 Summarizing session...")
             
