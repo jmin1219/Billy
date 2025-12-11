@@ -4,17 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "279f8b887f9b54ca",
+        "id": "e1e1202487eba5e4",
         "type": "tabs",
         "children": [
           {
-            "id": "2582dee3b28da89c",
+            "id": "cd4fd015d327eca7",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "concepts/Java Memory Model.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "Java Memory Model"
             }
           }
         ]
@@ -141,6 +145,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "concepts/Java Memory Model.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -150,7 +155,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks"
+              "title": "Backlinks for Java Memory Model"
             }
           },
           {
@@ -193,12 +198,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "concepts/Java Memory Model.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline"
+              "title": "Outline of Java Memory Model"
             }
           }
         ]
@@ -219,19 +225,21 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "2582dee3b28da89c",
+  "active": "cd4fd015d327eca7",
   "lastOpenFiles": [
+    "src/__pycache__/pipeline.cpython-313.pyc",
+    "venv/lib/python3.13/site-packages/rich-14.2.0.dist-info/WHEEL",
+    "venv/lib/python3.13/site-packages/rich-14.2.0.dist-info/REQUESTED",
+    "venv/lib/python3.13/site-packages/rich-14.2.0.dist-info/RECORD",
+    "venv/lib/python3.13/site-packages/rich-14.2.0.dist-info/METADATA",
+    "venv/lib/python3.13/site-packages/rich-14.2.0.dist-info/LICENSE",
+    "venv/lib/python3.13/site-packages/rich-14.2.0.dist-info/INSTALLER",
+    "venv/lib/python3.13/site-packages/rich-14.2.0.dist-info",
+    "venv/lib/python3.13/site-packages/rich/__pycache__/tree.cpython-313.pyc",
+    "venv/lib/python3.13/site-packages/rich/__pycache__/traceback.cpython-313.pyc",
+    "venv/lib/python3.13/site-packages/rich/__pycache__/themes.cpython-313.pyc",
+    "concepts/Java Memory Model.md",
     "output/daily_notes/2025-12-11.md",
-    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info/licenses/LICENSE.txt",
-    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info/licenses/AUTHORS.txt",
-    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info/top_level.txt",
-    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info/licenses",
-    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info/WHEEL",
-    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info/REQUESTED",
-    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info/RECORD",
-    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info/METADATA",
-    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info/INSTALLER",
-    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info",
     "output/daily_notes/2025-12-10.md",
     "Big Ideas/Co-op Recruitment & Portfolio Development.md",
     "venv/lib/python3.13/site-packages/idna-3.11.dist-info/licenses/LICENSE.md",

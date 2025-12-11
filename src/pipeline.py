@@ -8,7 +8,9 @@ All time logic delegated to clock.py (single source of truth).
 import xml.etree.ElementTree as ET
 import os
 import sys
+import json
 from collections import defaultdict
+from datetime import date
 import statistics
 
 # =============================================================================
@@ -37,18 +39,79 @@ from clock import (
 
 XML_FILE = os.path.join(SCRIPT_DIR, '..', 'data', 'export.xml')
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', 'output', 'daily_notes')
+CONCEPTS_DIR = os.path.join(SCRIPT_DIR, '..', 'concepts')
+XP_CACHE_FILE = os.path.join(SCRIPT_DIR, '..', 'data', 'xp_cache.json')
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+
+# =============================================================================
+# KNOWLEDGE XP COUNTER
+# =============================================================================
+
+def count_markdown_files(*directories: str) -> int:
+    """
+    Recursively counts all .md files across given directories.
+    """
+    total = 0
+    for directory in directories:
+        if not os.path.exists(directory):
+            continue
+        for root, _, files in os.walk(directory):
+            total += sum(1 for f in files if f.endswith('.md'))
+    return total
+
+
+def load_xp_cache() -> dict:
+    """
+    Loads the XP cache from disk. Returns default if missing/corrupt.
+    """
+    try:
+        with open(XP_CACHE_FILE, 'r') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {"date": None, "count": 0}
+
+
+def save_xp_cache(count: int) -> None:
+    """
+    Persists the current XP count with today's date.
+    """
+    cache = {
+        "date": date.today().isoformat(),
+        "count": count
+    }
+    with open(XP_CACHE_FILE, 'w') as f:
+        json.dump(cache, f, indent=2)
+
+
+def get_knowledge_xp() -> tuple[int, int]:
+    """
+    Returns (current_count, delta_since_last_cache).
+    Updates the cache file.
+    """
+    current_count = count_markdown_files(CONCEPTS_DIR, OUTPUT_DIR)
+    cache = load_xp_cache()
+    
+    # Calculate delta (default to 0 if no prior cache)
+    cached_count = cache.get("count", 0)
+    delta = current_count - cached_count
+    
+    # Persist new state
+    save_xp_cache(current_count)
+    
+    return current_count, delta
 
 
 # =============================================================================
 # DAILY NOTE GENERATION
 # =============================================================================
 
-def generate_daily_note(date_key: str, sleep_hours: float, hrv_avg: float):
+def generate_daily_note(date_key: str, sleep_hours: float, hrv_avg: float, knowledge_xp: tuple[int, int] | None = None):
     """
     Generates the Markdown file with Sleep + HRV data.
     Injects ground-truth timestamp from clock module.
+    Optionally includes Knowledge XP counter.
     """
     filename = os.path.join(OUTPUT_DIR, f"{date_key}.md")
     
@@ -59,6 +122,13 @@ def generate_daily_note(date_key: str, sleep_hours: float, hrv_avg: float):
     hrv_status = "Unknown"
     if hrv_avg > 0:
         hrv_status = "⚡ High Resilience" if hrv_avg > 50 else "⚠️ Stressed/Recovering"
+
+    # Knowledge XP line (if provided)
+    xp_line = ""
+    if knowledge_xp:
+        count, delta = knowledge_xp
+        delta_str = f"+{delta}" if delta >= 0 else str(delta)
+        xp_line = f"\n- **Knowledge Base:** {count} Nodes ({delta_str} today) 📈"
 
     # Ground-truth timestamp from clock module
     log_timestamp = get_timestamp()
@@ -71,7 +141,7 @@ def generate_daily_note(date_key: str, sleep_hours: float, hrv_avg: float):
 
 ## 1. Hardware State (Bio-Metrics)
 - **Sleep Duration:** {sleep_hours:.2f} hours ({battery_status})
-- **Nocturnal HRV:** {hrv_avg:.1f} ms ({hrv_status})
+- **Nocturnal HRV:** {hrv_avg:.1f} ms ({hrv_status}){xp_line}
 
 ## 2. Context (The Software)
 - **Log Time:** {display_time} ({time_context})
@@ -155,19 +225,23 @@ def parse_health_data(xml_file: str):
 
     print("\n--- Generating Bio-Dashboard ---")
     
+    # Get Knowledge XP once (avoid re-counting per note)
+    knowledge_xp = get_knowledge_xp()
+    print(f"📚 Knowledge Base: {knowledge_xp[0]} nodes ({'+' if knowledge_xp[1] >= 0 else ''}{knowledge_xp[1]} since last run)")
+    
     # Get all unique dates from both sets
     all_dates = sorted(set(list(daily_sleep.keys()) + list(daily_hrv.keys())))[-7:]
     
-    for date in all_dates:
+    for date_key in all_dates:
         # Calculate Sleep Hours from integer minutes
-        sleep_minutes = daily_sleep.get(date, 0)
+        sleep_minutes = daily_sleep.get(date_key, 0)
         hours = sleep_minutes / 60
         
         # Calculate HRV Average
-        hrv_readings = daily_hrv.get(date, [])
+        hrv_readings = daily_hrv.get(date_key, [])
         avg_hrv = statistics.mean(hrv_readings) if hrv_readings else 0.0
         
-        generate_daily_note(date, hours, avg_hrv)
+        generate_daily_note(date_key, hours, avg_hrv, knowledge_xp)
 
 
 # =============================================================================
