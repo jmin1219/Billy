@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "e1e1202487eba5e4",
+        "id": "43b14b7809a699e6",
         "type": "tabs",
         "children": [
           {
-            "id": "cd4fd015d327eca7",
+            "id": "50cac634f36a2da2",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "concepts/Java Memory Model.md",
+                "file": "concepts/The Ground Truth Architecture.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Java Memory Model"
+              "title": "The Ground Truth Architecture"
             }
           }
         ]
@@ -145,7 +145,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "concepts/Java Memory Model.md",
+                "file": "concepts/The Ground Truth Architecture.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -155,7 +155,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Java Memory Model"
+              "title": "Backlinks for The Ground Truth Architecture"
             }
           },
           {
@@ -198,13 +198,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "concepts/Java Memory Model.md",
+                "file": "concepts/The Ground Truth Architecture.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Java Memory Model"
+              "title": "Outline of The Ground Truth Architecture"
             }
           }
         ]
@@ -225,8 +225,12 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "cd4fd015d327eca7",
+  "active": "50cac634f36a2da2",
   "lastOpenFiles": [
+    "concepts/The Ground Truth Architecture.md",
+    "concepts/The 2 Minute Friction Test.md",
+    "concepts/Non-Linear Lineage.md",
+    "concepts/Java Memory Model.md",
     "src/__pycache__/pipeline.cpython-313.pyc",
     "venv/lib/python3.13/site-packages/rich-14.2.0.dist-info/WHEEL",
     "venv/lib/python3.13/site-packages/rich-14.2.0.dist-info/REQUESTED",
@@ -237,13 +241,10 @@
     "venv/lib/python3.13/site-packages/rich-14.2.0.dist-info",
     "venv/lib/python3.13/site-packages/rich/__pycache__/tree.cpython-313.pyc",
     "venv/lib/python3.13/site-packages/rich/__pycache__/traceback.cpython-313.pyc",
-    "venv/lib/python3.13/site-packages/rich/__pycache__/themes.cpython-313.pyc",
-    "concepts/Java Memory Model.md",
     "output/daily_notes/2025-12-11.md",
     "output/daily_notes/2025-12-10.md",
     "Big Ideas/Co-op Recruitment & Portfolio Development.md",
     "venv/lib/python3.13/site-packages/idna-3.11.dist-info/licenses/LICENSE.md",
-    "concepts/Non-Linear Lineage.md",
     "concepts/Billy Data Pipeline.md",
     "concepts/Tax Residency Research.md",
     "output/daily_notes/2025-12-09.md",

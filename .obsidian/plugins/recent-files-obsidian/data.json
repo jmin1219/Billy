@@ -1,6 +1,18 @@
 {
   "recentFiles": [
     {
+      "basename": "The Ground Truth Architecture",
+      "path": "concepts/The Ground Truth Architecture.md"
+    },
+    {
+      "basename": "The 2 Minute Friction Test",
+      "path": "concepts/The 2 Minute Friction Test.md"
+    },
+    {
+      "basename": "Non-Linear Lineage",
+      "path": "concepts/Non-Linear Lineage.md"
+    },
+    {
       "basename": "Java Memory Model",
       "path": "concepts/Java Memory Model.md"
     },
@@ -11,10 +23,6 @@
     {
       "basename": "2025-12-10",
       "path": "output/daily_notes/2025-12-10.md"
-    },
-    {
-      "basename": "Non-Linear Lineage",
-      "path": "concepts/Non-Linear Lineage.md"
     },
     {
       "basename": "Billy Data Pipeline",
