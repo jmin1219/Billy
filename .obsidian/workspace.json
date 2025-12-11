@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "f3f793aac1518641",
+        "id": "279f8b887f9b54ca",
         "type": "tabs",
         "children": [
           {
-            "id": "99e3a0b3443c9d99",
+            "id": "2582dee3b28da89c",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "output/daily_notes/2025-12-11.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "2025-12-11"
+              "title": "New tab"
             }
           }
         ]
@@ -145,7 +141,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "output/daily_notes/2025-12-11.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -155,7 +150,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for 2025-12-11"
+              "title": "Backlinks"
             }
           },
           {
@@ -198,13 +193,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "output/daily_notes/2025-12-11.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of 2025-12-11"
+              "title": "Outline"
             }
           }
         ]
@@ -225,20 +219,20 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "99e3a0b3443c9d99",
+  "active": "2582dee3b28da89c",
   "lastOpenFiles": [
-    "output/daily_notes/2025-12-10.md",
     "output/daily_notes/2025-12-11.md",
-    "src-tauri/target/debug/incremental/billy-2s8jzt3oynh59/s-hdt1hj4uz0-1hejfx5-a0j4ebuszq9xgbltn0iqxdd1t/work-products.bin",
-    "src-tauri/target/debug/incremental/billy-2s8jzt3oynh59/s-hdt1hj4uz0-1hejfx5-a0j4ebuszq9xgbltn0iqxdd1t/query-cache.bin",
-    "src-tauri/target/debug/incremental/billy-2s8jzt3oynh59/s-hdt1hj4uz0-1hejfx5-a0j4ebuszq9xgbltn0iqxdd1t/dep-graph.bin",
-    "src-tauri/target/debug/incremental/billy-2s8jzt3oynh59/s-hdt1hj4uz0-1hejfx5-a0j4ebuszq9xgbltn0iqxdd1t",
-    "src-tauri/target/debug/incremental/billy-0ypxfy1t5scyx/s-hdt1hj4uz8-1o1l6w0-c1np0kscinzdee52o3bg20zgt/work-products.bin",
-    "src-tauri/target/debug/incremental/billy-0ypxfy1t5scyx/s-hdt1hj4uz8-1o1l6w0-c1np0kscinzdee52o3bg20zgt/query-cache.bin",
-    "src-tauri/target/debug/incremental/billy-0ypxfy1t5scyx/s-hdt1hj4uz8-1o1l6w0-c1np0kscinzdee52o3bg20zgt/dep-graph.bin",
-    "src-tauri/target/debug/incremental/billy-0ypxfy1t5scyx/s-hdt1hj4uz8-1o1l6w0-c1np0kscinzdee52o3bg20zgt",
-    "src-tauri/target/debug/incremental/billy-2s8jzt3oynh59/s-hdt1hj4uz0-1hejfx5.lock",
-    "src-tauri/target/debug/incremental/billy-0ypxfy1t5scyx/s-hdt1hj4uz8-1o1l6w0.lock",
+    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info/licenses/LICENSE.txt",
+    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info/licenses/AUTHORS.txt",
+    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info/top_level.txt",
+    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info/licenses",
+    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info/WHEEL",
+    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info/REQUESTED",
+    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info/RECORD",
+    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info/METADATA",
+    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info/INSTALLER",
+    "venv/lib/python3.13/site-packages/pyperclip-1.11.0.dist-info",
+    "output/daily_notes/2025-12-10.md",
     "Big Ideas/Co-op Recruitment & Portfolio Development.md",
     "venv/lib/python3.13/site-packages/idna-3.11.dist-info/licenses/LICENSE.md",
     "concepts/Non-Linear Lineage.md",
